@@ -32,6 +32,9 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_DFU_ENV_SETTINGS \
+	"m4fw=zephyr_rpmsg_tcm.bin\0" \
+	"m4addr=0x007F8000\0" \
+	"bootm4=fatload mmc 0:1 $m4addr $m4fw && dcache flush && bootaux $m4addr\0" \
 	"script=boot.scr\0" \
 	"script_signed=boot.scr.imx-signed\0" \
 	"image=zImage\0" \
@@ -86,7 +89,7 @@
 #define CONFIG_BOOTCOMMAND \
 	   "mmc dev ${mmcdev};" \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
-		   "run do_bootscript_hab;" \
+		   "run bootm4; run do_bootscript_hab;" \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
 		   "else " \
